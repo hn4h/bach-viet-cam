@@ -1,19 +1,4 @@
 services:
-  rhythm-db:
-    image: postgres:16-alpine
-    container_name: bvc-rhythm-db
-    restart: unless-stopped
-    ports:
-      - "5433:5432"
-    environment:
-      - POSTGRES_USER=${RHYTHM_DB_USER:-rhythm}
-      - POSTGRES_PASSWORD=${RHYTHM_DB_PASSWORD:-rhythm}
-      - POSTGRES_DB=${RHYTHM_DB_NAME:-rhythm}
-    volumes:
-      - rhythm-db-data:/var/lib/postgresql/data
-    networks:
-      - bvc-network
-
   rhythm-service:
     build:
       context: ./rhythm-service
@@ -24,21 +9,19 @@ services:
       - "8001:8001"
     environment:
       - RHYTHM_SERVICE_APP_PORT=8001
-      - RHYTHM_SERVICE_DATABASE_URL=postgresql+psycopg://${RHYTHM_SERVICE_DB_USER:-rhythm}:${RHYTHM_SERVICE_DB_PASSWORD:-rhythm}@rhythm-db:5432/${RHYTHM_SERVICE_DB_NAME:-rhythm}
+      - RHYTHM_SERVICE_DATABASE_URL=${RHYTHM_SERVICE_DATABASE_URL:-postgresql+psycopg://bvc_admin:change-this-password@bvc-postgres:5432/bachvietcam_rhythm_staging}
       - RHYTHM_SERVICE_RABBITMQ_URL=${RHYTHM_SERVICE_RABBITMQ_URL:?Set RHYTHM_SERVICE_RABBITMQ_URL to your RabbitMQ Cloud AMQP URL}
-      - RHYTHM_SERVICE_TASK_QUEUE=rhythm.evaluate.v1
-      - RHYTHM_SERVICE_DEAD_LETTER_QUEUE=rhythm.evaluate.dlq
+      - RHYTHM_SERVICE_TASK_QUEUE=${RHYTHM_SERVICE_RHYTHM_TASK_QUEUE:-${RHYTHM_SERVICE_TASK_QUEUE:-rhythm.evaluate.v1}}
+      - RHYTHM_SERVICE_DEAD_LETTER_QUEUE=${RHYTHM_SERVICE_RHYTHM_DEAD_LETTER_QUEUE:-${RHYTHM_SERVICE_DEAD_LETTER_QUEUE:-rhythm.evaluate.dlq}}
       - RHYTHM_SERVICE_INTERNAL_API_KEY=${RHYTHM_SERVICE_INTERNAL_API_KEY:-change-me-in-production}
       - RHYTHM_SERVICE_GEMINI_API_KEY=${RHYTHM_SERVICE_GEMINI_API_KEY:-}
-      - RHYTHM_SERVICE_GEMINI_MODEL=${RHYTHM_SERVICE_GEMINI_MODEL:-gemini-2.5-flash}
-      - RHYTHM_SERVICE_GEMINI_TIMEOUT_SECONDS=30
+      - RHYTHM_SERVICE_GEMINI_MODEL=${RHYTHM_SERVICE_GEMINI_MODEL:-gemini-3.6-flash}
+      - RHYTHM_SERVICE_GEMINI_TIMEOUT_SECONDS=${RHYTHM_SERVICE_GEMINI_TIMEOUT_SECONDS:-500}
       - RHYTHM_SERVICE_MAX_FILE_BYTES=26214400
       - RHYTHM_SERVICE_DOWNLOAD_TIMEOUT_SECONDS=60
       - RHYTHM_SERVICE_MAX_RETRIES=3
       - RHYTHM_SERVICE_TEMP_DIRECTORY=/tmp/rhythm-service
       - RHYTHM_SERVICE_ALLOWED_HOSTS=${RHYTHM_SERVICE_ALLOWED_HOSTS:-}
-    depends_on:
-      - rhythm-db
     networks:
       - bvc-network
 
@@ -54,7 +37,7 @@ services:
       - PORT=8000
       - NODE_ENV=${NODE_ENV:-production}
       - APP_ORIGIN=${APP_ORIGIN:-http://localhost:3000}
-      - DATABASE_URL=${DATABASE_URL:-postgresql://anhnlh:Bvc%40123@host.docker.internal:5432/bachvietcam_staging}
+      - DATABASE_URL=${DATABASE_URL:-postgresql://bvc_admin:change-this-password@bvc-postgres:5432/bachvietcam_staging}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -77,7 +60,5 @@ services:
 
 networks:
   bvc-network:
-    driver: bridge
-
-volumes:
-  rhythm-db-data:
+    name: bvc-network
+    external: true

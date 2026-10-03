@@ -23,4 +23,5 @@ services:
 
 networks:
   bvc-network:
-    driver: bridge
+    name: bvc-network
+    external: true
