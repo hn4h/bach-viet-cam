@@ -6,18 +6,18 @@
   --font-bvc-mono: "IBM Plex Mono", ui-monospace, monospace;
 
   /* BVC brand colors */
-  --color-bvc-accent:        #F4622E;
-  --color-bvc-accent-tint:   #FEEEE7;
-  --color-bvc-accent-text:   #C4431A;
-  --color-bvc-ink:           #1A1714;
-  --color-bvc-muted:         #6E6A64;
-  --color-bvc-faint:         #A09B94;
-  --color-bvc-surface:       #F7F5F3;
-  --color-bvc-line:          #F2F1EF;
-  --color-bvc-border:        #EBE9E6;
-  --color-bvc-border-strong: #E0DDD9;
-  --color-bvc-bar:           #D8D5D0;
-  --color-bvc-bar-strong:    #A8A49E;
+  --color-bvc-accent:        #2F7A62;
+  --color-bvc-accent-tint:   #FBF3DE;
+  --color-bvc-accent-text:   #8A6A12;
+  --color-bvc-ink:           #123F33;
+  --color-bvc-muted:         #5E6F66;
+  --color-bvc-faint:         #93A199;
+  --color-bvc-surface:       #EDF2EE;
+  --color-bvc-line:          #EDF2EE;
+  --color-bvc-border:        #E2EAE4;
+  --color-bvc-border-strong: #CFDCD3;
+  --color-bvc-bar:           #D7E2DA;
+  --color-bvc-bar-strong:    #9FB0A5;
   --color-bvc-ok:            #2E7D4F;
   --color-bvc-warn:          #D99B1E;
   --color-bvc-error:         #F4622E;
