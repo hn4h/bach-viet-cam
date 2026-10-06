@@ -78,6 +78,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Copy .env into workspace
+        run: |
+          $candidatePaths = @("D:\BVC\bach-viet-cam\.env", "D:\BVC\.env")
+          $found = $false
+          foreach ($src in $candidatePaths) {
+            if (Test-Path $src) {
+              Write-Host "Found .env at $src. Copying into workspace..."
+              Copy-Item -Path $src -Destination ".env" -Force
+              $found = $true
+              break
+            }
+          }
+          if (-not $found) {
+            Write-Error "CRITICAL: Could not find .env at D:\BVC\bach-viet-cam\.env or D:\BVC\.env!"
+            exit 1
+          }
+
       - name: Rebuild and restart services with Docker Compose
         run: |
           Write-Host "Rebuilding and restarting containers..."
